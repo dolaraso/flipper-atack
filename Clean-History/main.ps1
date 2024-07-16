@@ -1,14 +1,17 @@
-# Borrar el contenido de la carpeta Temp
+# Definir la ruta de la carpeta Temp específica
+$tempPath = "C:\Users\Usuario\AppData\Local\Temp"
+
+# Borrar el contenido de la carpeta Temp específica
 try {
-    if (Test-Path $env:TEMP) {
-        Write-Output "Borrando archivos en $env:TEMP..."
-        Remove-Item "$env:TEMP\*" -Recurse -Force -ErrorAction Stop
-        Write-Output "Archivos en $env:TEMP borrados exitosamente."
+    if (Test-Path $tempPath) {
+        Write-Output "Borrando archivos en $tempPath..."
+        Remove-Item "$tempPath\*" -Recurse -Force -ErrorAction Stop
+        Write-Output "Archivos en $tempPath borrados exitosamente."
     } else {
-        Write-Output "La carpeta $env:TEMP no existe."
+        Write-Output "La carpeta $tempPath no existe."
     }
 } catch {
-    Write-Output "Error al borrar archivos en $env:TEMP: $_"
+    Write-Output "Error al borrar archivos en $tempPath: $_"
 }
 
 # Borrar el historial del cuadro de ejecución (Run box)
@@ -39,4 +42,3 @@ try {
 } catch {
     Write-Output "Error al borrar el contenido de la papelera de reciclaje: $_"
 }
-
