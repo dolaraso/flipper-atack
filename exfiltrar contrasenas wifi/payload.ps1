@@ -1,5 +1,5 @@
-# Define el token de acceso de Dropbox dinámicamente
-$db = ""  # El token de acceso de Dropbox será proporcionado dinámicamente
+# El token de acceso de Dropbox será proporcionado dinámicamente
+$db = ""  
 
 function Show-Header {
     $header = @"
@@ -81,4 +81,3 @@ try {
 catch {
     Write-Error "An error occurred: $_"
 }
-
