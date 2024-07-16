@@ -1,6 +1,4 @@
-Aquí tienes un README.md en español para el script PowerShell proporcionado:
 
-```markdown
 # Script de Autenticación y Subida de Credenciales a Dropbox y Discord
 
 Este script de PowerShell recopila credenciales de usuario, las guarda en un archivo temporal y luego las sube a Dropbox y Discord. Además, limpia cualquier rastro del script después de su ejecución.
