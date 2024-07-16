@@ -1,14 +1,13 @@
 # Script de Limpieza del Sistema
 
-Este script de PowerShell realiza varias tareas de limpieza en el sistema, incluyendo la eliminación de archivos temporales, el historial del cuadro de ejecución, el historial de PowerShell y el contenido de la papelera de reciclaje. También muestra mensajes en ventanas emergentes para informar al usuario sobre el estado de cada operación.
+Este script de PowerShell realiza varias tareas de limpieza en el sistema, incluyendo la eliminación de archivos temporales específicos, el historial del cuadro de ejecución, el historial de PowerShell y el contenido de la papelera de reciclaje.
 
 ## Funcionalidades
 
-- Elimina el contenido de la carpeta `Temp`.
+- Elimina el contenido de la carpeta `C:\Users\Usuario\AppData\Local\Temp`.
 - Elimina el historial del cuadro de ejecución (Run box).
 - Elimina el historial de PowerShell.
 - Elimina el contenido de la papelera de reciclaje.
-- Muestra mensajes en ventanas emergentes para informar sobre el éxito o error de cada operación.
 
 ## Uso
 
@@ -18,72 +17,65 @@ Este script de PowerShell realiza varias tareas de limpieza en el sistema, inclu
     cd nombre-del-repositorio
     ```
 
-2. **Ejecuta el script**:
-    - Abre PowerShell con privilegios de administrador.
-    - Navega hasta el directorio donde se encuentra el script.
+2. **Edita el script**:
+    - Abre el archivo `limpieza.ps1` en un editor de texto.
+    - Reemplaza `Usuario` con tu nombre de usuario actual en Windows en la línea que define `$tempPath`.
+
+3. **Ejecuta el script**:
+    - Abre PowerShell con privilegios de administrador (Windows + X, selecciona `Windows PowerShell (Admin)`).
+    - Navega hasta el directorio donde se encuentra el script. Por ejemplo, si lo guardaste en `C:\Scripts`, ejecuta:
+      ```powershell
+      cd C:\Scripts
+      ```
     - Ejecuta el script:
       ```powershell
-      .\nombre-del-script.ps1
+      .\limpieza.ps1
       ```
 
 ## Código del Script
 
 ```powershell
-# Función para mostrar mensajes en una ventana emergente
-function Show-MessageBox {
-    param (
-        [string]$message,
-        [string]$title
-    )
-    Add-Type -AssemblyName PresentationFramework
-    [System.Windows.MessageBox]::Show($message, $title, 'OK', 'Information')
-}
+# Definir la ruta de la carpeta Temp específica
+$tempPath = "C:\Users\Usuario\AppData\Local\Temp"
 
-# Función para eliminar archivos de una carpeta
-function Clear-Folder {
-    param (
-        [string]$folderPath
-    )
-    try {
-        if (Test-Path $folderPath) {
-            Remove-Item "$folderPath\*" -Recurse -Force -ErrorAction SilentlyContinue
-            Show-MessageBox "Archivos en $folderPath borrados exitosamente." "Éxito"
-        } else {
-            Show-MessageBox "La carpeta $folderPath no existe." "Error"
-        }
-    } catch {
-        Show-MessageBox "Error al borrar archivos en $folderPath: $_" "Error"
+# Borrar el contenido de la carpeta Temp específica
+try {
+    if (Test-Path $tempPath) {
+        Write-Output "Borrando archivos en $tempPath..."
+        Remove-Item "$tempPath\*" -Recurse -Force -ErrorAction Stop
+        Write-Output "Archivos en $tempPath borrados exitosamente."
+    } else {
+        Write-Output "La carpeta $tempPath no existe."
     }
+} catch {
+    Write-Output "Error al borrar archivos en $tempPath: $_"
 }
-
-# Borrar el contenido de la carpeta Temp
-Clear-Folder $env:TEMP
 
 # Borrar el historial del cuadro de ejecución (Run box)
 try {
     reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU /va /f
-    Show-MessageBox "Historial del cuadro de ejecución borrado exitosamente." "Éxito"
+    Write-Output "Historial del cuadro de ejecución borrado exitosamente."
 } catch {
-    Show-MessageBox "Error al borrar el historial del cuadro de ejecución: $_" "Error"
+    Write-Output "Error al borrar el historial del cuadro de ejecución: $_"
 }
 
 # Borrar el historial de PowerShell
 try {
     $historyPath = (Get-PSReadlineOption).HistorySavePath
     if (Test-Path $historyPath) {
-        Remove-Item $historyPath -Force -ErrorAction SilentlyContinue
-        Show-MessageBox "Historial de PowerShell borrado exitosamente." "Éxito"
+        Remove-Item $historyPath -Force -ErrorAction Stop
+        Write-Output "Historial de PowerShell borrado exitosamente."
     } else {
-        Show-MessageBox "No se encontró el archivo de historial de PowerShell." "Error"
+        Write-Output "No se encontró el archivo de historial de PowerShell."
     }
 } catch {
-    Show-MessageBox "Error al borrar el historial de PowerShell: $_" "Error"
+    Write-Output "Error al borrar el historial de PowerShell: $_"
 }
 
 # Borrar el contenido de la papelera de reciclaje
 try {
-    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
-    Show-MessageBox "Contenido de la papelera de reciclaje borrado exitosamente." "Éxito"
+    Clear-RecycleBin -Force -ErrorAction Stop
+    Write-Output "Contenido de la papelera de reciclaje borrado exitosamente."
 } catch {
-    Show-MessageBox "Error al borrar el contenido de la papelera de reciclaje: $_" "Error"
+    Write-Output "Error al borrar el contenido de la papelera de reciclaje: $_"
 }
