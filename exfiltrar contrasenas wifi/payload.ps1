@@ -18,10 +18,7 @@ function Show-Header {
 }
 
 function DropBox-Upload {
-    [CmdletBinding()]
     param (
-        [Parameter (Mandatory = $True, ValueFromPipeline = $True)]
-        [Alias("f")]
         [string]$SourceFilePath
     )
     $outputFile = Split-Path $SourceFilePath -leaf
@@ -72,9 +69,10 @@ try {
 
     # Subir a Dropbox si se proporciona el token
     if (-not ([string]::IsNullOrEmpty($dropboxToken))) {
-        DropBox-Upload -f $zipFilePath
+        DropBox-Upload -SourceFilePath $zipFilePath
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
+        exit
     }
 
     # Limpiar el archivo ZIP
