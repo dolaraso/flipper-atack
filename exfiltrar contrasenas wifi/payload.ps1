@@ -19,7 +19,9 @@ function DropBox-Upload {
         "Content-Type" = 'application/octet-stream'
     }
 
-    $header = @"
+    $fileContent = Get-Content -Path $SourceFilePath -Raw
+    $tempFilePath = [System.IO.Path]::GetTempFileName()
+    $combinedContent = @"
 ########################################################################################################################
 #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
 #   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
@@ -28,11 +30,8 @@ function DropBox-Upload {
 #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################           
-"@
+"@ + "`r`n" + $fileContent
 
-    $fileContent = Get-Content -Path $SourceFilePath -Raw
-    $combinedContent = $header + "`r`n" + $fileContent
-    $tempFilePath = [System.IO.Path]::GetTempFileName()
     Set-Content -Path $tempFilePath -Value $combinedContent
 
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $tempFilePath -Headers $headers
