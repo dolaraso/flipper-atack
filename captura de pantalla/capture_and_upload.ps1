@@ -4,7 +4,8 @@ function DropBox-Upload {
     param (
         [Parameter (Mandatory = $True, ValueFromPipeline = $True)]
         [Alias("f")]
-        [string]$SourceFilePath
+        [string]$SourceFilePath,
+        [string]$db
     )
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
@@ -45,7 +46,7 @@ try {
 
     # Subir la captura de pantalla a Dropbox
     if (-not ([string]::IsNullOrEmpty($db))) {
-        DropBox-Upload -SourceFilePath $screenshotPath
+        DropBox-Upload -SourceFilePath $screenshotPath -db $db
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
     }
