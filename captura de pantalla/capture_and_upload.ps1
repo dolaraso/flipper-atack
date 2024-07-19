@@ -55,5 +55,3 @@ catch {
     Write-Error "Ocurrió un error: $_"
 }
 
-
-
