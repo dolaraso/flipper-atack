@@ -1,0 +1,18 @@
+REM Title: install dropbox
+REM Author: mr.flippermen
+REM Description: Automates the installation of Dropbox SDK on Windows 10, 11 using PowerShell.
+REM Target: Windows 10, 11
+
+REM Abrir la ventana Ejecutar
+DELAY 750
+GUI r
+DELAY 500
+
+REM Lanzar PowerShell en modo visible para instalar Dropbox
+STRING powershell -NoProfile -Command "pip install dropbox"
+ENTER
+DELAY 10000  ; Espera a que pip complete la instalación
+
+REM Cierra PowerShell después de la instalación
+STRING exit
+ENTER
