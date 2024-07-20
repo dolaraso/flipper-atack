@@ -127,7 +127,8 @@ ENTER
 REM Salir del script
 STRING exit
 ENTER
-```
+plaintext```
+
 ##Contribuir
 
 Las contribuciones son bienvenidas. Puedes hacer un fork del repositorio y enviar un pull request con tus mejoras o correcciones.
