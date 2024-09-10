@@ -8,7 +8,7 @@
  #########################################################################################################################
 
 param (
-    [string]$db  # Parámetro para el token de Dropbox
+    [string]$db = ""  # Parámetro para el token de Dropbox
 )
 
 # Validar que el token no esté vacío
