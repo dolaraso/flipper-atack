@@ -1,5 +1,4 @@
-      
- $db = "" # Tu token de acceso a Dropbox
+$db = "" # Tu token de acceso a Dropbox
 
 # Función para subir un archivo a Dropbox
 function DropBox-Upload {
