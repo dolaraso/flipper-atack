@@ -13,7 +13,7 @@ param (
 
 # Validar que el token no esté vacío
 if (-not $db) {
-    Write-Host "El token de Dropbox no está definido." -ForegroundColor Red
+    Write-Host "El token de Dropbox no está definido o no se ha pasado correctamente." -ForegroundColor Red
     exit
 }
 
