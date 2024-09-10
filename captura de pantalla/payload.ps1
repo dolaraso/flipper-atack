@@ -7,9 +7,8 @@
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################
 
-param (
-    [string]$db = ""  # Parámetro para el token de Dropbox
-)
+# Recuperar el token de Dropbox desde la variable de entorno
+$db = $env:DROPBOX_TOKEN
 
 # Validar que el token no esté vacío
 if (-not $db) {
@@ -63,3 +62,4 @@ DropBox-Upload -SourceFilePath $filePath
 
 # Eliminar el archivo temporal
 Remove-Item -Path $filePath -ErrorAction SilentlyContinue
+
