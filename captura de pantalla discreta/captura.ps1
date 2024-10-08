@@ -58,5 +58,20 @@ function Capture-And-UploadScreenshot {
     Remove-Item -Path $zipFile
 }
 
-# Llamar a la función para ejecutar el proceso
-Capture-And-UploadScreenshot
+# Bucle infinito para capturar y subir cada 10 segundos, detenerse si se encuentra stop.txt
+while ($true) {
+    # Verificar si el archivo stop.txt existe en la carpeta temporal
+    $stopSignalFile = "$env:TEMP\stop.txt"
+    if (Test-Path $stopSignalFile) {
+        Write-Host "Archivo de señalización detectado. Deteniendo el script."
+        # Eliminar el archivo de señalización
+        Remove-Item $stopSignalFile -Force
+        exit
+    }
+
+    # Ejecutar captura y subida
+    Capture-And-UploadScreenshot
+
+    # Esperar 10 segundos antes de la siguiente captura
+    Start-Sleep -Seconds 10
+}

