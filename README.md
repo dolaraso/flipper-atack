@@ -2,7 +2,10 @@
 
 # 🚀 **Flipper Zero CyberAttack Suite - Bicampeón en Ingenials 3.0 & 2025** 🏆  
 
+
 Este repositorio contiene una colección avanzada de scripts de PowerShell diseñados para potenciar el **Flipper Zero** en escenarios de ciberseguridad ofensiva y análisis forense. Con un enfoque en la automatización y la eficiencia, estos scripts permiten realizar desde **exfiltración de credenciales** hasta **análisis de puertos y captura de datos sensibles** en entornos Windows.  
+
+![Mr. Flipper](IMG/cyber.png)
 
 🏆 **Este proyecto ha sido bicampeón en las competencias de ciberseguridad Ingenials 3.0 (2024) y Ingenials 2025, consolidándose como una herramienta de referencia para pruebas de seguridad.**  
 
