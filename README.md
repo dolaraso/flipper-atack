@@ -1,26 +1,53 @@
-# Ingenials 3.0 UDLA - Scripts de PowerShell para Flipper Zero
 
-Este repositorio contiene una colección de scripts de PowerShell diseñados específicamente para ser utilizados con el dispositivo Flipper Zero en el contexto de la competencia Ingenials 3.0, organizada por la Universidad de las Américas (UDLA). Estos scripts están orientados a facilitar y automatizar tareas de ciberseguridad durante la competencia, permitiendo a los participantes enfocarse en estrategias y análisis más complejos.
 
-## 📜 Características del Repositorio
+# 🚀 **Flipper Zero CyberAttack Suite - Bicampeón en Ingenials 3.0 & 2025** 🏆  
 
-- **Scripts Personalizados**: Cada script ha sido cuidadosamente desarrollado para interactuar eficazmente con el Flipper Zero, aprovechando sus capacidades únicas en escenarios de ciberseguridad.
+Este repositorio contiene una colección avanzada de scripts de PowerShell diseñados para potenciar el **Flipper Zero** en escenarios de ciberseguridad ofensiva y análisis forense. Con un enfoque en la automatización y la eficiencia, estos scripts permiten realizar desde **exfiltración de credenciales** hasta **análisis de puertos y captura de datos sensibles** en entornos Windows.  
 
-- **Documentación Detallada**: Todos los scripts incluyen comentarios exhaustivos que explican su funcionamiento y cómo se pueden adaptar o extender para diferentes necesidades o escenarios.
+🏆 **Este proyecto ha sido bicampeón en las competencias de ciberseguridad Ingenials 3.0 (2024) y Ingenials 2025, consolidándose como una herramienta de referencia para pruebas de seguridad.**  
 
-- **Facilidad de Uso**: Los scripts están diseñados para ser intuitivos y fáciles de usar, incluso para aquellos que están comenzando en el mundo de la ciberseguridad con hardware.
+## 🔥 **Características Principales**  
 
-- **Seguridad y Eficiencia**: Priorizamos la seguridad y la eficiencia en el diseño de cada script, asegurando que las operaciones sean seguras y optimizadas para un entorno competitivo.
+✅ **Exfiltración de Contraseñas WiFi** – Obtén claves de redes guardadas en el sistema.  
+✅ **Exfiltración de Datos del Sistema** – Extrae información sensible del equipo, incluyendo credenciales almacenadas.  
+✅ **Análisis de Puertos Abiertos** – Identifica servicios activos y potenciales vulnerabilidades en la máquina objetivo.  
+✅ **Keylogger** – Captura pulsaciones de teclado de forma discreta para auditorías de seguridad.  
+✅ **Exploración de Árbol de Directorios** – Enumera archivos y estructuras del sistema.  
+✅ **Identificación de Componentes de Hardware** – Recupera detalles técnicos del dispositivo comprometido.  
+✅ **Robo de Datos SAM y SYSTEM** – Obtén credenciales del sistema Windows.  
+✅ **Captura de Pantalla** – Modos discreto y demostrativo para auditoría visual de la máquina objetivo.  
+✅ **Filtración de Archivos** – Extrae y almacena documentos clave sin dejar rastros evidentes.  
+✅ **Instalación de Dropbox para Exfiltración** – Automatiza la subida de archivos comprometidos a la nube.  
 
-## 🚀 Uso
+## 🚀 **Uso y Ejecución**  
 
-Para utilizar estos scripts, simplemente clona el repositorio en tu sistema, sigue las instrucciones de instalación y ejecución detalladas en el archivo `README.md`.
+1️⃣ **Clona el repositorio:**  
+```bash
+git clone https://github.com/dolaraso/flipper-atack.git
+```
+2️⃣ **Carga los scripts en el Flipper Zero o ejecútalos en un entorno Windows autorizado.**  
+3️⃣ **Personaliza y adapta los payloads según tu objetivo de prueba de seguridad.**  
 
-## 🤝 Contribuir
+⚠️ **Advertencia:** Este proyecto está diseñado **exclusivamente para pruebas de seguridad autorizadas** y **fines educativos**.  
 
-Invitamos a los participantes y entusiastas de la ciberseguridad a contribuir al repositorio mediante la adición de nuevos scripts o la mejora de los existentes. Si tienes ideas o correcciones, no dudes en realizar un 'pull request' o abrir un 'issue'.
+## 🏆 **Reconocimientos**  
 
-## 🔒 Licencia
+- **Primer lugar en la categoría de Ingeniería en Ciberseguridad - Ingenials 3.0 (2024).**  
+- **Primer lugar en la categoría de Ingeniería en Ciberseguridad - Ingenials 2025.**  
+- **Desarrollado para facilitar auditorías de seguridad en entornos controlados.**  
 
-Este proyecto está bajo la Licencia MIT. Para más detalles, ver el archivo `LICENSE` incluido en el repositorio.
+## 🤝 **Contribuciones**  
 
+Si deseas mejorar o expandir las capacidades de estos scripts, ¡tu contribución es bienvenida! Abre un **issue** o envía un **pull request** con tus mejoras.  
+
+## 📜 **Licencia**  
+
+Este proyecto se distribuye bajo la **Licencia MIT**.  
+
+---
+
+## **🚨 Descargo de Responsabilidad:**
+
+El uso de este repositorio y los scripts contenidos en él es responsabilidad exclusiva del usuario. El autor de este proyecto **no se hace responsable** de cualquier daño, perjuicio o actividad ilegal que resulte del uso de estos scripts en entornos no autorizados o no controlados. Este proyecto debe ser utilizado únicamente con fines educativos y en entornos de pruebas con permisos explícitos. El uso indebido de este código puede estar sujeto a acciones legales. El usuario es responsable de cumplir con todas las leyes locales y regulaciones aplicables.
+
+---
