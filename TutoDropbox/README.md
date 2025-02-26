@@ -12,12 +12,12 @@ Este documento proporciona una guía paso a paso para crear y configurar una API
 2. Inicia sesión con tu cuenta de Dropbox.
 3. Haz clic en "Create App".
    
-![tuto](TutoDropbox/IMG/1.jpg)
+![tuto](IMG/1.jpg)
 
 ### Paso 2: Configurar la Aplicación
 1. Selecciona "Scoped access".
 
-   ![tuto1](TutoDropbox/IMG/2.jpg)
+   ![tuto1](IMG/2.jpg)
 3. En "Choose the type of access you need", elige "App folder".
 4. Asigna un nombre a la aplicación (Ejemplo: `bat_Back_USB`).
 5. Haz clic en "Create App".
@@ -25,7 +25,7 @@ Este documento proporciona una guía paso a paso para crear y configurar una API
 ---
 
 ## 2. Configurar Permisos de la Aplicación
-![tuto2](TutoDropbox/IMG/3.jpg)
+![tuto2](IMG/3.jpg)
 
 ### Paso 3: Editar Permisos
 1. Dirígete a la pestaña "Permissions".
@@ -33,17 +33,17 @@ Este documento proporciona una guía paso a paso para crear y configurar una API
    - "Edit content"
    - "View content"
 3. Haz clic en "Submit" para guardar los cambios.
-![tuto3](TutoDropbox/IMG/4.jpg)
+![tuto3](IMG/4.jpg)
 ---
 
 ## 3. Obtener y Configurar el Access Token
-![tuto4](TutoDropbox/IMG/5.jpg)
+![tuto4](IMG/5.jpg)
 ### Paso 4: Generar Access Token
 1. Ve a la pestaña "Settings" de tu aplicación.
 2. Busca la sección "OAuth 2".
 3. Haz clic en "Generate Access Token".
 4. Copia el token generado.
-![tuto5](TutoDropbox/IMG/6.jpg)
+![tuto5](IMG/6.jpg)
 ### Paso 5: Configurar el Script
 1. Abre el archivo `Export-WiFiKeys.ps1`.
 2. Busca la línea `db = ""` (aproximadamente en la línea 49).
@@ -77,18 +77,6 @@ El script `Export-WiFiKeys.ps1` tiene la funcionalidad incorporada para exfiltra
    ```
 
 En ambas opciones, el script extraerá las credenciales WiFi y las subirá automáticamente a Dropbox.
-
----
-
-## Imágenes de Referencia
-
-1. **Pantalla de creación de la aplicación**.
-2. **Selección del tipo de acceso y nombre de la aplicación**.
-3. **Configuración de permisos en la pestaña "Permissions"**.
-4. **Generación del Access Token en la pestaña "Settings"**.
-5. **Edición del archivo `Export-WiFiKeys.ps1` con el token copiado**.
-6. **Ejecución del script desde Flipper Zero o Windows**.
-
 ---
 
 ## Notas Importantes
@@ -100,4 +88,4 @@ En ambas opciones, el script extraerá las credenciales WiFi y las subirá autom
 Este proyecto está licenciado bajo los términos de la licencia MIT. Consulta el archivo LICENSE para más detalles.
 
 🚨 **Descargo de Responsabilidad**: El uso indebido de este código puede estar sujeto a acciones legales. El usuario es responsable de cumplir con todas las leyes locales y regulaciones aplicables. Este proyecto debe utilizarse únicamente con fines educativos y en entornos de pruebas con permisos explícitos.
-
+---
