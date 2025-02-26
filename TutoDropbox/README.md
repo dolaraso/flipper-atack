@@ -6,21 +6,26 @@ Este documento proporciona una guía paso a paso para crear y configurar una API
 ---
 
 ## 1. Creación de una Aplicación en Dropbox
-![tuto](IMG/1.png)
+
 ### Paso 1: Acceder a Dropbox Developer
 1. Ingresa a [Dropbox Developers](https://www.dropbox.com/developers/apps).
 2. Inicia sesión con tu cuenta de Dropbox.
 3. Haz clic en "Create App".
+   
+![tuto](TutoDropbox/IMG/1.jpg)
 
 ### Paso 2: Configurar la Aplicación
 1. Selecciona "Scoped access".
-2. En "Choose the type of access you need", elige "App folder".
-3. Asigna un nombre a la aplicación (Ejemplo: `bat_Back_USB`).
-4. Haz clic en "Create App".
+
+   ![tuto1](TutoDropbox/IMG/2.jpg)
+3. En "Choose the type of access you need", elige "App folder".
+4. Asigna un nombre a la aplicación (Ejemplo: `bat_Back_USB`).
+5. Haz clic en "Create App".
 
 ---
 
 ## 2. Configurar Permisos de la Aplicación
+![tuto2](TutoDropbox/IMG/3.jpg)
 
 ### Paso 3: Editar Permisos
 1. Dirígete a la pestaña "Permissions".
@@ -28,17 +33,17 @@ Este documento proporciona una guía paso a paso para crear y configurar una API
    - "Edit content"
    - "View content"
 3. Haz clic en "Submit" para guardar los cambios.
-
+![tuto3](TutoDropbox/IMG/4.jpg)
 ---
 
 ## 3. Obtener y Configurar el Access Token
-
+![tuto4](TutoDropbox/IMG/5.jpg)
 ### Paso 4: Generar Access Token
 1. Ve a la pestaña "Settings" de tu aplicación.
 2. Busca la sección "OAuth 2".
 3. Haz clic en "Generate Access Token".
 4. Copia el token generado.
-
+![tuto5](TutoDropbox/IMG/6.jpg)
 ### Paso 5: Configurar el Script
 1. Abre el archivo `Export-WiFiKeys.ps1`.
 2. Busca la línea `db = ""` (aproximadamente en la línea 49).
