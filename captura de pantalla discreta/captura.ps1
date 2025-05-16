@@ -171,4 +171,4 @@ while ($true) {
     # Esperar 10 segundos antes de la siguiente captura
     Start-Sleep -Seconds 10
 }
->>>>>>> d6c3c20b25ab668db3ad42178e66d112181ccd82
+
